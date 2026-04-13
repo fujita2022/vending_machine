@@ -4,17 +4,19 @@
     </IfModule>
 
     RewriteEngine On
+    # サブフォルダ配下で動かすMAMP特有のつまずき対策
+    RewriteBase /vending_machine/public/
 
-    # Handle Authorization Header
+    # Authorizationヘッダを維持
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # 末尾スラッシュ除去
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # 既存ファイル/ディレクトリでなければ index.php に渡す
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
