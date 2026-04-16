@@ -7,6 +7,15 @@
     <div style="border: 1px solid #999; padding: 50px 60px; width: 900px; background-color: #fff;">
         <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @if ($errors->any())
+    <div style="color: red; margin-bottom: 20px;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
             <div style="display: flex; align-items: center; margin-bottom: 35px;">
                 <label for="product_name" style="width: 250px; font-size: 28px; font-weight: bold;">

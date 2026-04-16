@@ -40,8 +40,8 @@
     <div class="row mb-4">
         <div class="col-md-4 fw-bold">コメント</div>
         <div class="col-md-8">
-            <div style="border:1px solid #ccc; padding:10px;">
-                {{ $product->comment }}
+            <div style="border:1px solid #ccc; padding:10px; width:420px; min-height:110px; background:#fff;">
+                {{ $product->comment ?? 'コメントなし' }}
             </div>
         </div>
     </div>

@@ -8,6 +8,15 @@
     <div style="border: 1px solid #000; padding: 50px 60px; width: 900px; background-color: #fff;">
         <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @if ($errors->any())
+    <div style="color: red; margin-bottom: 20px;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
             @method('PUT')
 
             <div style="display: flex; align-items: center; margin-bottom: 35px;">
