@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\Product;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use Exception;
 
 class ProductController extends Controller
@@ -38,33 +40,8 @@ class ProductController extends Controller
         return view('products.create', compact('companies'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate(
-    [
-        'product_name' => 'required|max:255',
-        'company_id'   => 'required',
-        'price'        => 'required|integer|min:0',
-        'stock'        => 'required|integer|min:0',
-        'comment'      => 'nullable|max:255',
-        'img_path'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ],
-    [
-        'product_name.required' => '商品名は必須です。',
-        'product_name.max' => '商品名は255文字以内で入力してください。',
-        'company_id.required' => 'メーカー名は必須です。',
-        'price.required' => '価格は必須です。',
-        'price.integer' => '価格は半角数字で入力してください。',
-        'price.min' => '価格は0以上で入力してください。',
-        'stock.required' => '在庫数は必須です。',
-        'stock.integer' => '在庫数は半角数字で入力してください。',
-        'stock.min' => '在庫数は0以上で入力してください。',
-        'comment.max' => 'コメントは255文字以内で入力してください。',
-        'img_path.image' => '商品画像は画像ファイルを選択してください。',
-        'img_path.mimes' => '商品画像はjpeg,png,jpg,gif形式でアップロードしてください。',
-        'img_path.max' => '商品画像は2MB以内にしてください。',
-    ]);
-
         try {
         $product = new Product([
             'product_name' => $request->get('product_name'),
@@ -78,7 +55,9 @@ class ProductController extends Controller
             $filename = $request->img_path->getClientOriginalName();
             $filePath = $request->img_path->storeAs('products', $filename, 'public');
             $product->img_path = '/storage/' . $filePath;
-        }
+        }else {
+            $product->img_path = null;
+            }
 
         $product->save();
 
@@ -86,7 +65,7 @@ class ProductController extends Controller
     } catch (Exception $e) {
         return back()->withInput()->with('error', '商品登録に失敗しました。');
     }
-}
+    }
 
     public function show(Product $product)
     {
@@ -99,33 +78,8 @@ class ProductController extends Controller
         return view('products.edit', compact('product', 'companies'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $request->validate(
-    [
-        'product_name' => 'required|max:255',
-        'company_id'   => 'required',
-        'price'        => 'required|integer|min:0',
-        'stock'        => 'required|integer|min:0',
-        'comment'      => 'nullable|max:255',
-        'img_path'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ],
-    [
-        'product_name.required' => '商品名は必須です。',
-        'product_name.max' => '商品名は255文字以内で入力してください。',
-        'company_id.required' => 'メーカー名は必須です。',
-        'price.required' => '価格は必須です。',
-        'price.integer' => '価格は半角数字で入力してください。',
-        'price.min' => '価格は0以上で入力してください。',
-        'stock.required' => '在庫数は必須です。',
-        'stock.integer' => '在庫数は半角数字で入力してください。',
-        'stock.min' => '在庫数は0以上で入力してください。',
-        'comment.max' => 'コメントは255文字以内で入力してください。',
-        'img_path.image' => '商品画像は画像ファイルを選択してください。',
-        'img_path.mimes' => '商品画像はjpeg,png,jpg,gif形式でアップロードしてください。',
-        'img_path.max' => '商品画像は2MB以内にしてください。',
-    ]);
-
         try {
         $product->product_name = $request->product_name;
         $product->company_id   = $request->company_id;
